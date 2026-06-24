@@ -1,0 +1,749 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Deva | Web Developer</title>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+  <style>
+    :root[data-theme="light"] {
+      --bg: #F8F7FF; --bg2: #EEECFC; --bg3: #E4E0FA; --card: #ffffff;
+      --border: #D9D3F5; --text: #0A0F1E; --muted: #5a5680;
+      --accent: #6D28D9; --accent2: #7C3AED; --glow: rgba(109,40,217,0.18);
+      --highlight: #6D28D9; --nav-blur: rgba(248,247,255,0.9);
+    }
+    :root[data-theme="dark"] {
+      --bg: #0A0F1E; --bg2: #111827; --bg3: #1a2035; --card: #141c2e;
+      --border: #1e2d4a; --text: #F0EFFF; --muted: #8892a4;
+      --accent: #7C3AED; --accent2: #9d5cf5; --glow: rgba(124,58,237,0.35);
+      --highlight: #C4B5FD; --nav-blur: rgba(10,15,30,0.88);
+    }
+    
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); transition: background 0.35s, color 0.35s; overflow-x: hidden; }
+
+    /* NAV */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 6vw; height: 64px;
+      background: var(--nav-blur); backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border); transition: background 0.35s;
+    }
+    .nav-logo { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 1.35rem; color: var(--accent2); }
+    .nav-logo span { color: var(--text); }
+    .nav-links { display: flex; gap: 2rem; list-style: none; }
+    .nav-links a { text-decoration: none; color: var(--muted); font-size: 0.9rem; font-weight: 500; transition: color 0.2s; }
+    .nav-links a:hover { color: var(--accent2); }
+    .nav-right { display: flex; align-items: center; gap: 1rem; }
+    .theme-toggle {
+      background: var(--bg3); border: 1px solid var(--border); color: var(--text);
+      border-radius: 50px; padding: 6px 14px; font-size: 0.82rem; cursor: pointer;
+      font-family: 'Inter', sans-serif; font-weight: 500; transition: all 0.2s;
+      display: flex; align-items: center; gap: 6px;
+    }
+    .theme-toggle:hover { border-color: var(--accent2); color: var(--accent2); }
+    .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; background: none; border: none; padding: 4px; }
+    .hamburger span { display: block; width: 22px; height: 2px; background: var(--text); border-radius: 2px; transition: all 0.3s; }
+
+    /* HERO */
+    .hero {
+      min-height: 100vh; display: grid; grid-template-columns: 1fr 1fr;
+      align-items: center; gap: 4rem; padding: 120px 6vw 80px;
+      position: relative; overflow: hidden;
+    }
+    .hero-bg { position: absolute; inset: 0; pointer-events: none; }
+    .orb { position: absolute; border-radius: 50%; filter: blur(100px); opacity: 0.3; }
+    .orb1 { width: 550px; height: 550px; background: var(--accent); top: -120px; right: -120px; }
+    .orb2 { width: 400px; height: 400px; background: #1D4ED8; bottom: -100px; left: -100px; opacity: 0.2; }
+    .hero-left { position: relative; z-index: 1; }
+    .hero-tag {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: var(--bg3); border: 1px solid var(--border);
+      border-radius: 50px; padding: 6px 16px;
+      font-size: 0.8rem; color: var(--highlight); font-weight: 500; margin-bottom: 2rem;
+    }
+    .hero-tag .dot { width: 7px; height: 7px; border-radius: 50%; background: #22c55e; animation: pulse-dot 1.8s infinite; }
+    @keyframes pulse-dot { 0%,100%{transform:scale(1);opacity:1} 50%{transform:scale(1.5);opacity:0.6} }
+    h1 { font-family: 'Space Grotesk', sans-serif; font-size: clamp(2.2rem, 4.5vw, 4rem); font-weight: 700; line-height: 1.1; letter-spacing: -1.5px; margin-bottom: 1.5rem; }
+    h1 .name { color: var(--accent2); }
+    .cursor { display: inline-block; width: 3px; height: 0.9em; background: var(--accent2); margin-left: 4px; vertical-align: middle; animation: blink 1s step-end infinite; border-radius: 2px; }
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+    .hero-sub { font-size: clamp(0.95rem, 1.8vw, 1.1rem); color: var(--muted); max-width: 480px; line-height: 1.7; margin-bottom: 2.5rem; }
+    .hero-btns { display: flex; gap: 1rem; flex-wrap: wrap; }
+    .btn-primary { background: var(--accent); color: #fff; padding: 14px 32px; border-radius: 10px; font-weight: 600; font-size: 0.95rem; text-decoration: none; transition: all 0.25s; box-shadow: 0 0 30px var(--glow); font-family: 'Inter', sans-serif; }
+    .btn-primary:hover { background: var(--accent2); transform: translateY(-2px); box-shadow: 0 0 50px var(--glow); }
+    .btn-secondary { background: transparent; color: var(--text); padding: 14px 32px; border-radius: 10px; border: 1.5px solid var(--border); font-weight: 600; font-size: 0.95rem; text-decoration: none; transition: all 0.25s; font-family: 'Inter', sans-serif; }
+    .btn-secondary:hover { border-color: var(--accent2); color: var(--accent2); }
+
+    /* HERO RIGHT - IMAGE COLLAGE */
+    .hero-right { position: relative; z-index: 1; height: 520px; }
+    .hero-img-main {
+      width: 100%; height: 340px; border-radius: 20px; overflow: hidden;
+      border: 2px solid var(--border); box-shadow: 0 30px 80px rgba(0,0,0,0.4);
+    }
+    .hero-img-main img { width: 100%; height: 100%; object-fit: cover; }
+    .hero-img-float {
+      position: absolute; bottom: 0; right: 0;
+      width: 55%; height: 200px; border-radius: 16px; overflow: hidden;
+      border: 2px solid var(--accent); box-shadow: 0 0 40px var(--glow);
+    }
+    .hero-img-float img { width: 100%; height: 100%; object-fit: cover; }
+    .hero-img-float2 {
+      position: absolute; bottom: 30px; left: -20px;
+      width: 42%; height: 160px; border-radius: 14px; overflow: hidden;
+      border: 2px solid var(--border); box-shadow: 0 20px 50px rgba(0,0,0,0.35);
+    }
+    .hero-img-float2 img { width: 100%; height: 100%; object-fit: cover; }
+    .hero-badge {
+      position: absolute; top: 20px; right: -10px;
+      background: var(--accent); color: #fff;
+      border-radius: 12px; padding: 10px 16px;
+      font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 0.85rem;
+      box-shadow: 0 8px 30px var(--glow);
+    }
+
+    /* SECTION COMMON */
+    section { padding: 100px 6vw; }
+    .section-label { font-size: 0.78rem; font-weight: 600; letter-spacing: 3px; text-transform: uppercase; color: var(--highlight); margin-bottom: 0.75rem; }
+    h2 { font-family: 'Space Grotesk', sans-serif; font-size: clamp(1.8rem, 4vw, 2.8rem); font-weight: 700; letter-spacing: -0.8px; margin-bottom: 1rem; line-height: 1.2; }
+    .section-desc { color: var(--muted); max-width: 560px; line-height: 1.75; font-size: 1rem; margin-bottom: 3.5rem; }
+
+    /* WHAT I BUILD - image showcase */
+    #showcase { background: var(--bg2); }
+    .showcase-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; margin-top: 0;
+    }
+    .showcase-card {
+      border-radius: 16px; overflow: hidden; border: 1px solid var(--border);
+      background: var(--card); transition: all 0.35s; position: relative; group: true;
+    }
+    .showcase-card:hover { transform: translateY(-8px); border-color: var(--accent); box-shadow: 0 25px 60px var(--glow); }
+    .showcase-img { width: 100%; height: 200px; overflow: hidden; }
+    .showcase-img img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s; }
+    .showcase-card:hover .showcase-img img { transform: scale(1.07); }
+    .showcase-info { padding: 1.2rem 1.4rem; }
+    .showcase-tag { display: inline-block; background: var(--bg3); border: 1px solid var(--border); border-radius: 50px; padding: 3px 12px; font-size: 0.72rem; color: var(--highlight); font-weight: 600; margin-bottom: 0.6rem; }
+    .showcase-title { font-family: 'Space Grotesk', sans-serif; font-size: 1rem; font-weight: 600; margin-bottom: 0.3rem; }
+    .showcase-desc { font-size: 0.82rem; color: var(--muted); line-height: 1.5; }
+
+    /* SERVICES / PRICING */
+    #services { background: var(--bg); }
+    .pricing-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(270px, 1fr)); gap: 1.5rem; }
+    .price-card { background: var(--card); border: 1px solid var(--border); border-radius: 18px; padding: 2rem; transition: all 0.3s; position: relative; overflow: hidden; }
+    .price-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, var(--accent), var(--accent2)); opacity: 0; transition: opacity 0.3s; }
+    .price-card:hover { transform: translateY(-6px); border-color: var(--accent); box-shadow: 0 20px 50px var(--glow); }
+    .price-card:hover::before { opacity: 1; }
+    
+    
+    .featured-badge { display: inline-block; background: var(--accent); color: #fff; font-size: 0.7rem; font-weight: 700; padding: 3px 10px; border-radius: 50px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 1rem; }
+    .price-img { width: 100%; height: 130px; border-radius: 10px; overflow: hidden; margin-bottom: 1.2rem; }
+    .price-img img { width: 100%; height: 100%; object-fit: cover; }
+    .price-title { font-family: 'Space Grotesk', sans-serif; font-size: 1.1rem; font-weight: 600; margin-bottom: 0.4rem; }
+    .price-range { font-family: 'Space Grotesk', sans-serif; font-size: 1.6rem; font-weight: 700; color: var(--accent2); margin-bottom: 0.3rem; }
+    .price-note { font-size: 0.8rem; color: var(--muted); margin-bottom: 1.2rem; }
+    .price-divider { height: 1px; background: var(--border); margin: 1.2rem 0; }
+    .price-features { list-style: none; }
+    .price-features li { display: flex; align-items: flex-start; gap: 10px; font-size: 0.88rem; color: var(--muted); padding: 5px 0; line-height: 1.5; }
+    .price-features li .check { color: var(--accent2); font-size: 0.9rem; flex-shrink: 0; margin-top: 1px; }
+
+    /* ABOUT */
+    #about { display: grid; grid-template-columns: 1fr 1fr; gap: 5rem; align-items: center; background: var(--bg2); }
+    .about-visual { position: relative; }
+    .about-img-main { width: 100%; height: 380px; border-radius: 20px; overflow: hidden; border: 2px solid var(--border); box-shadow: 0 30px 70px rgba(0,0,0,0.3); }
+    .about-img-main img { width: 100%; height: 100%; object-fit: cover; }
+    .about-img-overlay {
+      position: absolute; bottom: -20px; right: -20px;
+      width: 55%; height: 180px; border-radius: 14px; overflow: hidden;
+      border: 2px solid var(--accent); box-shadow: 0 0 40px var(--glow);
+    }
+    .about-img-overlay img { width: 100%; height: 100%; object-fit: cover; }
+    .code-float {
+      position: absolute; top: 20px; left: -20px;
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: 12px; padding: 14px 18px;
+      font-family: 'Courier New', monospace; font-size: 0.76rem; color: var(--muted);
+      box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+    }
+    .code-float .hl { color: var(--accent2); }
+    .code-float .str { color: #22c55e; }
+    .about-text p { color: var(--muted); line-height: 1.8; margin-bottom: 1.2rem; font-size: 0.97rem; }
+    .skills-wrap { margin-top: 2rem; }
+    .skills-title { font-family: 'Space Grotesk', sans-serif; font-size: 0.9rem; font-weight: 600; margin-bottom: 1rem; }
+    .skill-tags { display: flex; flex-wrap: wrap; gap: 0.6rem; }
+    .skill-tag { background: var(--bg3); border: 1px solid var(--border); border-radius: 8px; padding: 6px 14px; font-size: 0.82rem; color: var(--muted); font-weight: 500; transition: all 0.2s; }
+    .skill-tag:hover { border-color: var(--accent2); color: var(--accent2); }
+
+    /* PROCESS */
+    #process { background: var(--bg); }
+    .process-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.5rem; }
+    .process-card { background: var(--card); border: 1px solid var(--border); border-radius: 16px; overflow: hidden; transition: all 0.3s; }
+    .process-card:hover { transform: translateY(-5px); border-color: var(--accent); box-shadow: 0 20px 50px var(--glow); }
+    .process-img { width: 100%; height: 160px; overflow: hidden; }
+    .process-img img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s; }
+    .process-card:hover .process-img img { transform: scale(1.08); }
+    .process-body { padding: 1.4rem; }
+    .process-num { font-family: 'Space Grotesk', sans-serif; font-size: 2rem; font-weight: 700; color: var(--accent2); opacity: 0.4; margin-bottom: 0.5rem; }
+    .process-title { font-family: 'Space Grotesk', sans-serif; font-size: 1rem; font-weight: 600; margin-bottom: 0.4rem; }
+    .process-desc { font-size: 0.83rem; color: var(--muted); line-height: 1.6; }
+
+    /* WHY ME */
+    #why { background: var(--bg2); }
+    .why-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 1.5rem; }
+    .why-card { background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 1.8rem; transition: all 0.3s; }
+    .why-card:hover { border-color: var(--accent); transform: translateY(-4px); }
+    .why-icon { font-size: 1.8rem; margin-bottom: 1rem; }
+    .why-title { font-family: 'Space Grotesk', sans-serif; font-size: 1rem; font-weight: 600; margin-bottom: 0.5rem; }
+    .why-desc { font-size: 0.85rem; color: var(--muted); line-height: 1.65; }
+
+    /* CONTACT */
+    #contact { position: relative; overflow: hidden; background: var(--bg); }
+    .contact-bg-img { position: absolute; inset: 0; z-index: 0; }
+    .contact-bg-img img { width: 100%; height: 100%; object-fit: cover; opacity: 0.07; }
+    .contact-overlay { position: absolute; inset: 0; background: linear-gradient(to bottom, var(--bg) 0%, transparent 30%, transparent 70%, var(--bg) 100%); z-index: 1; }
+    .contact-inner { position: relative; z-index: 2; text-align: center; }
+    #contact h2 { margin-bottom: 1rem; }
+    #contact .section-desc { margin: 0 auto 2.5rem; text-align: center; }
+    .contact-card { display: inline-flex; flex-direction: column; align-items: center; background: var(--card); border: 1px solid var(--border); border-radius: 20px; padding: 2.5rem 3.5rem; box-shadow: 0 20px 60px rgba(0,0,0,0.2); gap: 1.2rem; }
+    .insta-btn { display: flex; align-items: center; gap: 12px; background: linear-gradient(135deg, #833ab4, #fd1d1d, #fcb045); color: #fff; padding: 16px 36px; border-radius: 12px; font-weight: 700; font-size: 1rem; text-decoration: none; transition: all 0.3s; box-shadow: 0 8px 30px rgba(130,58,180,0.4); }
+    .insta-btn:hover { transform: translateY(-3px) scale(1.03); box-shadow: 0 14px 40px rgba(130,58,180,0.5); }
+    .insta-btn svg { width: 22px; height: 22px; }
+    .contact-handle { font-family: 'Space Grotesk', sans-serif; font-size: 1.05rem; color: var(--muted); }
+    .contact-handle span { color: var(--highlight); font-weight: 600; }
+
+    /* FOOTER */
+    footer { background: var(--bg2); border-top: 1px solid var(--border); padding: 2rem 6vw; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem; }
+    .footer-logo { font-family: 'Space Grotesk', sans-serif; font-weight: 700; color: var(--accent2); font-size: 1rem; }
+    .footer-copy { font-size: 0.82rem; color: var(--muted); }
+
+    /* REVEAL */
+    .reveal { opacity: 0; transform: translateY(28px); transition: opacity 0.65s, transform 0.65s; }
+    .reveal.visible { opacity: 1; transform: none; }
+
+    /* RESPONSIVE */
+    @media (max-width: 1000px) {
+      .hero { grid-template-columns: 1fr; min-height: auto; padding-top: 100px; }
+      .hero-right { height: 300px; }
+      .hero-img-main { height: 220px; }
+      #about { grid-template-columns: 1fr; gap: 3rem; }
+      .about-img-overlay { display: none; }
+      .code-float { display: none; }
+      .showcase-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 640px) {
+      nav { padding: 0 4vw; }
+      .nav-links { display: none; flex-direction: column; position: fixed; top: 64px; left: 0; right: 0; background: var(--bg2); padding: 1.5rem 2rem; border-bottom: 1px solid var(--border); gap: 1.2rem; }
+      .nav-links.open { display: flex; }
+      .hamburger { display: flex; }
+      section { padding: 70px 4vw; }
+      .showcase-grid { grid-template-columns: 1fr; }
+      .contact-card { padding: 2rem 1.5rem; width: 100%; }
+      footer { flex-direction: column; text-align: center; }
+      .hero-right { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">Dev<span>a</span></div>
+  <ul class="nav-links" id="navLinks">
+    <li><a href="#showcase">Work</a></li>
+    <li><a href="#services">Pricing</a></li>
+    <li><a href="#about">About</a></li>
+    <li><a href="#process">Process</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+  <div class="nav-right">
+    <div class="nav-right">
+      <button class="theme-toggle" id="themeBtn">
+        <span id="themeIcon">🌙</span><span id="themeLabel">Dark</span>
+      </button>
+      <button class="hamburger" id="hamburger"><span></span><span></span><span></span></button>
+    </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg">
+    <div class="orb orb1"></div>
+    <div class="orb orb2"></div>
+  </div>
+  <div class="hero-left">
+    <div class="hero-tag"><div class="dot"></div> Available for projects</div>
+    <h1>Hi, I'm <span class="name">Deva</span><span class="cursor"></span><br>I Build Websites<br>That Work.</h1>
+    <p class="hero-sub">From student portfolios to business websites — I craft fast, clean, and responsive web experiences tailored to your needs and budget.</p>
+    <div class="hero-btns">
+      <a href="#services" class="btn-primary">View Pricing</a>
+      <a href="#contact" class="btn-secondary">Get in Touch</a>
+    </div>
+  </div>
+  <div class="hero-right reveal">
+    <div class="hero-img-main">
+      <img src="https://images.unsplash.com/photo-1587620962725-abab7fe55159?w=800&auto=format&fit=crop" alt="coding setup" loading="lazy"/>
+    </div>
+    <div class="hero-img-float">
+      <img src="https://images.unsplash.com/photo-1547658719-da2b51169166?w=600&auto=format&fit=crop" alt="website design" loading="lazy"/>
+    </div>
+    <div class="hero-img-float2">
+      <img src="https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=500&auto=format&fit=crop" alt="code editor" loading="lazy"/>
+    </div>
+    <div class="hero-badge">💻 Web Dev</div>
+  </div>
+</section>
+
+<!-- WHAT I BUILD -->
+<section id="showcase">
+  <div class="reveal">
+    <div class="section-label">What I Build</div>
+    <h2>Types of Websites I Create</h2>
+    <p class="section-desc">Every project is crafted with care — responsive, modern, and tailored to its purpose.</p>
+  </div>
+  <div class="showcase-grid">
+    <div class="showcase-card reveal">
+      <div class="showcase-img">
+        <img src="portfoil.png" alt="portfolio website" loading="lazy"/>
+      </div>
+      <div class="showcase-info">
+        <div class="showcase-tag">Portfolio</div>
+        <div class="showcase-title">Student Portfolio Sites</div>
+        <div class="showcase-desc">Clean, professional portfolios that help students stand out to employers and colleges.</div>
+      </div>
+    </div>
+    <div class="showcase-card reveal">
+      <div class="showcase-img">
+        <img src="bussiness.png" alt="business website" loading="lazy"/>
+      </div>
+      <div class="showcase-info">
+        <div class="showcase-tag">Business</div>
+        <div class="showcase-title">Business Websites</div>
+        <div class="showcase-desc">Professional sites for small businesses and companies to grow their online presence.</div>
+      </div>
+    </div>
+    <div class="showcase-card reveal">
+      <div class="showcase-img">
+        <img src="finalproject.jpg" alt="project website" loading="lazy"/>
+      </div>
+      <div class="showcase-info">
+        <div class="showcase-tag">Academic</div>
+        <div class="showcase-title">Final Year Projects</div>
+        <div class="showcase-desc">Complete academic project websites with all the pages and features you need to impress.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section id="services">
+  <div class="reveal">
+    <div class="section-label">What I Offer</div>
+    <h2>Services & Pricing</h2>
+    <p class="section-desc">Transparent pricing for every need. Quality delivery, no hidden charges.</p>
+  </div>
+  <div class="pricing-grid">
+
+    <div class="price-card reveal">
+      <div class="price-img">
+        <img src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=500&auto=format&fit=crop" alt="student portfolio" loading="lazy"/>
+      </div>
+      <div class="price-title">🎓 Student Portfolio</div>
+      <div class="price-range">₹800 – ₹5,000</div>
+      <div class="price-note">Perfect for freshers & students</div>
+      <div class="price-divider"></div>
+      <ul class="price-features">
+        <li><span class="check">✦</span> Clean, professional design</li>
+        <li><span class="check">✦</span> Projects & skills showcase</li>
+        <li><span class="check">✦</span> Resume / about section</li>
+        <li><span class="check">✦</span> Mobile responsive</li>
+        <li><span class="check">✦</span> Contact form</li>
+      </ul>
+    </div>
+
+    <div class="price-card reveal">
+      <svg viewBox="0 0 300 140" xmlns="http://www.w3.org/2000/svg">
+        <rect width="300" height="140" fill="#0a1628"/>
+        <!-- single page layout -->
+        <rect x="20" y="15" width="260" height="110" rx="8" fill="#0f2040"/>
+        <rect x="20" y="15" width="260" height="22" fill="#1a3a60"/>
+        <rect x="28" y="21" width="40" height="10" rx="5" fill="#22c55e" opacity=".7"/>
+        <rect x="195" y="22" width="22" height="8" rx="4" fill="#8892a4" opacity=".4"/>
+        <rect x="222" y="22" width="22" height="8" rx="4" fill="#8892a4" opacity=".4"/>
+        <rect x="249" y="22" width="22" height="8" rx="4" fill="#8892a4" opacity=".4"/>
+        <!-- content -->
+        <rect x="30" y="50" width="100" height="10" rx="5" fill="#f8f8f2" opacity=".7"/>
+        <rect x="30" y="67" width="80" height="7" rx="3" fill="#8892a4" opacity=".5"/>
+        <rect x="30" y="80" width="90" height="7" rx="3" fill="#8892a4" opacity=".4"/>
+        <rect x="30" y="97" width="50" height="16" rx="8" fill="#22c55e" opacity=".8"/>
+        <!-- image placeholder -->
+        <rect x="170" y="44" width="100" height="75" rx="6" fill="#1a3a60"/>
+        <circle cx="220" cy="75" r="20" fill="#22c55e" opacity=".15"/>
+        <rect x="188" y="70" width="65" height="5" rx="2" fill="#22c55e" opacity=".5"/>
+        <rect x="195" y="81" width="50" height="5" rx="2" fill="#8892a4" opacity=".4"/>
+      </svg>
+      <div class="price-title">💻 Single Page Project</div>
+      <div class="price-range">₹500 – ₹1,000</div>
+      <div class="price-note">Quick, focused single-page sites</div>
+      <div class="price-divider"></div>
+      <ul class="price-features">
+        <li><span class="check">✦</span> Landing page or info site</li>
+        <li><span class="check">✦</span> Fast delivery</li>
+        <li><span class="check">✦</span> Clean layout & good UI</li>
+        <li><span class="check">✦</span> Mobile-first design</li>
+        <li><span class="check">✦</span> Social links integration</li>
+      </ul>
+    </div>
+
+    <div class="price-card featured reveal">
+      <div class="featured-badge">⭐ Popular</div>
+      <div class="price-img">
+        <img src="https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=500&auto=format&fit=crop" alt="final year project" loading="lazy"/>
+      </div>
+      <div class="price-title">🏆 Final Year Project</div>
+      <div class="price-range">₹1,000 – ₹6,000</div>
+      <div class="price-note">Complete academic project websites</div>
+      <div class="price-divider"></div>
+      <ul class="price-features">
+        <li><span class="check">✦</span> Full project website</li>
+        <li><span class="check">✦</span> Custom features as needed</li>
+        <li><span class="check">✦</span> Documentation support</li>
+        <li><span class="check">✦</span> Multiple pages</li>
+        <li><span class="check">✦</span> Presentation-ready design</li>
+      </ul>
+    </div>
+
+    <div class="price-card reveal">
+      <svg viewBox="0 0 300 140" xmlns="http://www.w3.org/2000/svg">
+        <rect width="300" height="140" fill="#0a1a0a"/>
+        <!-- shop front illustration -->
+        <rect x="60" y="30" width="180" height="90" rx="6" fill="#0f2a0f"/>
+        <rect x="60" y="30" width="180" height="30" fill="#14401a"/>
+        <text x="100" y="52" font-size="12" fill="#22c55e" font-family="sans-serif" font-weight="bold">SHOP</text>
+        <!-- door -->
+        <rect x="125" y="80" width="50" height="40" rx="4" fill="#0a1a0a"/>
+        <circle cx="168" cy="101" r="3" fill="#22c55e" opacity=".6"/>
+        <!-- windows -->
+        <rect x="72" y="70" width="40" height="30" rx="3" fill="#1a3a1a"/>
+        <rect x="188" y="70" width="40" height="30" rx="3" fill="#1a3a1a"/>
+        <rect x="72" y="70" width="40" height="2" fill="#22c55e" opacity=".3"/>
+        <rect x="188" y="70" width="40" height="2" fill="#22c55e" opacity=".3"/>
+        <!-- product items in window -->
+        <circle cx="88" cy="87" r="8" fill="#22c55e" opacity=".3"/>
+        <circle cx="204" cy="87" r="8" fill="#22c55e" opacity=".3"/>
+        <!-- stars -->
+        <text x="95" y="128" font-size="14" fill="#febc2e" font-family="serif" text-anchor="middle">★★★★</text>
+        <rect x="55" y="133" width="190" height="5" rx="2" fill="#22c55e" opacity=".3"/>
+      </svg>
+      <div class="price-title">🏪 Small Business</div>
+      <div class="price-range">Within Budget</div>
+      <div class="price-note">Flexible — you set the budget</div>
+      <div class="price-divider"></div>
+      <ul class="price-features">
+        <li><span class="check">✦</span> Business info & services</li>
+        <li><span class="check">✦</span> Budget-friendly solutions</li>
+        <li><span class="check">✦</span> Local business friendly</li>
+        <li><span class="check">✦</span> Contact & map integration</li>
+        <li><span class="check">✦</span> Affordable & practical</li>
+      </ul>
+    </div>
+
+    <div class="price-card reveal">
+      <div class="price-img">
+        <img src="https://images.unsplash.com/photo-1497366216548-37526070297c?w=500&auto=format&fit=crop" alt="business corporate website" loading="lazy"/>
+      </div>
+      <div class="price-title">🏢 Business Website</div>
+      <div class="price-range">₹7,000+</div>
+      <div class="price-note">Professional business presence</div>
+      <div class="price-divider"></div>
+      <ul class="price-features">
+        <li><span class="check">✦</span> Multi-page website</li>
+        <li><span class="check">✦</span> Custom branding & design</li>
+        <li><span class="check">✦</span> Services & team sections</li>
+        <li><span class="check">✦</span> Fully responsive</li>
+        <li><span class="check">✦</span> Professional delivery</li>
+      </ul>
+    </div>
+
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="about-visual reveal">
+    <div class="about-img-main">
+      <img src="https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=800&auto=format&fit=crop" alt="developer working" loading="lazy"/>
+    </div>
+    <div class="about-img-overlay">
+      <img src="https://images.unsplash.com/photo-1537432376769-00f5c2f4c8d2?w=500&auto=format&fit=crop" alt="code on screen" loading="lazy"/>
+    </div>
+    <div class="code-float">
+      <span class="hl">const</span> deva = {<br>
+      &nbsp;&nbsp;role: <span class="str">"Web Dev"</span>,<br>
+      &nbsp;&nbsp;passion: <span class="str">"Building"</span>,<br>
+      &nbsp;&nbsp;available: <span class="hl">true</span><br>
+      };
+    </div>
+  </div>
+  <div class="about-text reveal">
+    <div class="section-label">About Me</div>
+    <h2>Passionate Developer,<br>Real Results.</h2>
+    <p>I'm Deva — a web developer who loves turning ideas into clean, functional websites. Whether you're a student who needs a portfolio to stand out, or a business looking to establish an online presence, I've got you covered.</p>
+    <p>I believe great websites don't have to be expensive. My goal is to deliver quality work that fits your budget — and makes you proud to share your link.</p>
+    <div class="skills-wrap">
+      <div class="skills-title">Technologies I Work With</div>
+      <div class="skill-tags">
+        <span class="skill-tag">HTML5</span>
+        <span class="skill-tag">CSS3</span>
+        <span class="skill-tag">JavaScript</span>
+        <span class="skill-tag">Responsive Design</span>
+        <span class="skill-tag">UI / UX</span>
+        <span class="skill-tag">Web Development</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROCESS -->
+<section id="process">
+  <div class="reveal">
+    <div class="section-label">How It Works</div>
+    <h2>My Simple Process</h2>
+    <p class="section-desc">From idea to live website — here's how we work together.</p>
+  </div>
+  <div class="process-grid">
+    <div class="process-card reveal">
+      <svg viewBox="0 0 260 150" xmlns="http://www.w3.org/2000/svg">
+        <rect width="260" height="150" fill="#0f172a"/>
+        <!-- chat bubbles -->
+        <rect x="20" y="25" width="140" height="38" rx="12" fill="#1e293b"/>
+        <rect x="20" y="37" width="140" height="2" fill="none"/>
+        <text x="32" y="40" font-size="9" fill="#8892a4" font-family="sans-serif">Hi! I need a website</text>
+        <text x="32" y="54" font-size="9" fill="#8892a4" font-family="sans-serif">for my portfolio 🙂</text>
+        <polygon points="20,55 30,63 30,55" fill="#1e293b"/>
+        <!-- reply bubble -->
+        <rect x="90" y="78" width="150" height="36" rx="12" fill="#7C3AED" opacity=".7"/>
+        <text x="102" y="93" font-size="9" fill="#fff" font-family="sans-serif">Sure! Tell me your</text>
+        <text x="102" y="106" font-size="9" fill="#fff" font-family="sans-serif">budget & ideas 💜</text>
+        <polygon points="240,95 230,87 230,95" fill="#7C3AED" opacity=".7"/>
+        <!-- instagram logo hint -->
+        <rect x="20" y="125" width="36" height="16" rx="8" fill="#833ab4" opacity=".7"/>
+        <text x="28" y="137" font-size="8" fill="#fff" font-family="sans-serif">DM</text>
+      </svg>
+      <div class="process-body">
+        <div class="process-num">01</div>
+        <div class="process-title">Tell Me Your Idea</div>
+        <div class="process-desc">Message me on Instagram with what you need. We'll talk about your goals and budget.</div>
+      </div>
+    </div>
+    <div class="process-card reveal">
+      <svg viewBox="0 0 260 150" xmlns="http://www.w3.org/2000/svg">
+        <rect width="260" height="150" fill="#0f172a"/>
+        <!-- wireframe sketch -->
+        <rect x="20" y="15" width="220" height="120" rx="8" fill="#1e293b" stroke="#334155" stroke-width="1" stroke-dasharray="4,3"/>
+        <!-- header wireframe -->
+        <rect x="30" y="24" width="200" height="20" rx="4" fill="#334155" opacity=".6"/>
+        <rect x="35" y="29" width="50" height="10" rx="3" fill="#7C3AED" opacity=".5"/>
+        <rect x="165" y="29" width="25" height="10" rx="3" fill="#475569" opacity=".5"/>
+        <rect x="196" y="29" width="25" height="10" rx="3" fill="#7C3AED" opacity=".7"/>
+        <!-- hero wireframe -->
+        <rect x="30" y="50" width="110" height="14" rx="3" fill="#475569" opacity=".5"/>
+        <rect x="30" y="70" width="90" height="8" rx="3" fill="#334155" opacity=".5"/>
+        <rect x="30" y="84" width="100" height="8" rx="3" fill="#334155" opacity=".4"/>
+        <rect x="30" y="98" width="45" height="16" rx="8" fill="#7C3AED" opacity=".6"/>
+        <!-- image box -->
+        <rect x="155" y="50" width="75" height="70" rx="6" fill="#334155" opacity=".4"/>
+        <line x1="155" y1="50" x2="230" y2="120" stroke="#475569" stroke-width="1" opacity=".4"/>
+        <line x1="230" y1="50" x2="155" y2="120" stroke="#475569" stroke-width="1" opacity=".4"/>
+        <!-- pencil icon -->
+        <rect x="205" y="18" width="16" height="4" rx="2" fill="#febc2e" opacity=".8" transform="rotate(-35 205 18)"/>
+      </svg>
+      <div class="process-body">
+        <div class="process-num">02</div>
+        <div class="process-title">Design & Plan</div>
+        <div class="process-desc">I plan the layout, structure, and design that fits your needs perfectly.</div>
+      </div>
+    </div>
+    <div class="process-card reveal">
+      <svg viewBox="0 0 260 150" xmlns="http://www.w3.org/2000/svg">
+        <rect width="260" height="150" fill="#0d1117"/>
+        <!-- code editor -->
+        <rect x="10" y="10" width="240" height="130" rx="8" fill="#161b22" stroke="#30363d" stroke-width="1"/>
+        <rect x="10" y="10" width="240" height="22" fill="#21262d"/>
+        <circle cx="24" cy="21" r="5" fill="#ff5f57"/>
+        <circle cx="38" cy="21" r="5" fill="#febc2e"/>
+        <circle cx="52" cy="21" r="5" fill="#28c840"/>
+        <text x="68" y="25" font-size="8" fill="#8892a4" font-family="monospace">index.html — Deva</text>
+        <!-- code lines animated feel -->
+        <rect x="22" y="42" width="55" height="6" rx="3" fill="#7C3AED" opacity=".9"/>
+        <rect x="84" y="42" width="90" height="6" rx="3" fill="#22c55e" opacity=".7"/>
+        <rect x="34" y="56" width="40" height="6" rx="3" fill="#60a5fa" opacity=".7"/>
+        <rect x="82" y="56" width="70" height="6" rx="3" fill="#f8f8f2" opacity=".5"/>
+        <rect x="160" y="56" width="40" height="6" rx="3" fill="#22c55e" opacity=".6"/>
+        <rect x="34" y="70" width="30" height="6" rx="3" fill="#f97316" opacity=".7"/>
+        <rect x="72" y="70" width="100" height="6" rx="3" fill="#f8f8f2" opacity=".45"/>
+        <rect x="22" y="84" width="70" height="6" rx="3" fill="#7C3AED" opacity=".8"/>
+        <rect x="100" y="84" width="120" height="6" rx="3" fill="#22c55e" opacity=".6"/>
+        <rect x="34" y="98" width="60" height="6" rx="3" fill="#60a5fa" opacity=".6"/>
+        <rect x="102" y="98" width="75" height="6" rx="3" fill="#f8f8f2" opacity=".4"/>
+        <rect x="22" y="112" width="80" height="6" rx="3" fill="#7C3AED" opacity=".5"/>
+        <!-- blinking cursor -->
+        <rect x="113" y="110" width="2" height="10" rx="1" fill="#9d5cf5">
+          <animate attributeName="opacity" values="1;0;1" dur="1s" repeatCount="indefinite"/>
+        </rect>
+        <rect x="22" y="126" width="45" height="6" rx="3" fill="#22c55e" opacity=".7"/>
+      </svg>
+      <div class="process-body">
+        <div class="process-num">03</div>
+        <div class="process-title">Build It</div>
+        <div class="process-desc">I code your website with clean HTML, CSS, and JavaScript — fully responsive.</div>
+      </div>
+    </div>
+    <div class="process-card reveal">
+      <svg viewBox="0 0 260 150" xmlns="http://www.w3.org/2000/svg">
+        <rect width="260" height="150" fill="#0a1628"/>
+        <!-- delivery / launch rocket -->
+        <!-- browser window showing live site -->
+        <rect x="15" y="20" width="230" height="110" rx="8" fill="#0f2040" stroke="#1e3a6e" stroke-width="1.5"/>
+        <rect x="15" y="20" width="230" height="22" fill="#1a3a60"/>
+        <circle cx="30" cy="31" r="4" fill="#ff5f57"/>
+        <circle cx="42" cy="31" r="4" fill="#febc2e"/>
+        <circle cx="54" cy="31" r="4" fill="#28c840"/>
+        <rect x="66" y="25" width="120" height="12" rx="6" fill="#0f2040"/>
+        <text x="75" y="35" font-size="7" fill="#22c55e" font-family="monospace">🟢 deva-project.live</text>
+        <!-- live website preview -->
+        <rect x="25" y="50" width="210" height="72" rx="5" fill="#061020"/>
+        <rect x="35" y="58" width="90" height="8" rx="4" fill="#7C3AED" opacity=".8"/>
+        <rect x="35" y="72" width="70" height="5" rx="2" fill="#8892a4" opacity=".5"/>
+        <rect x="35" y="83" width="80" height="5" rx="2" fill="#8892a4" opacity=".4"/>
+        <rect x="35" y="96" width="45" height="14" rx="7" fill="#7C3AED" opacity=".8"/>
+        <!-- website preview image block -->
+        <rect x="150" y="56" width="75" height="58" rx="5" fill="#1a3a60"/>
+        <circle cx="187" cy="82" r="16" fill="#7C3AED" opacity=".25"/>
+        <rect x="163" y="78" width="48" height="5" rx="2" fill="#9d5cf5" opacity=".5"/>
+        <rect x="168" y="89" width="38" height="4" rx="2" fill="#8892a4" opacity=".35"/>
+        <!-- checkmark delivered -->
+        <circle cx="215" cy="28" r="10" fill="#22c55e" opacity=".2"/>
+        <text x="209" y="33" font-size="12" fill="#22c55e">✓</text>
+      </svg>
+      <div class="process-body">
+        <div class="process-num">04</div>
+        <div class="process-title">Deliver to You</div>
+        <div class="process-desc">Your website is delivered, ready to go live. Simple, fast, and satisfying.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- WHY ME -->
+<section id="why">
+  <div class="reveal">
+    <div class="section-label">Reasons to Choose</div>
+    <h2>Why Work With Me?</h2>
+    <p class="section-desc">I bring honesty, effort, and care to every project — no matter the size or budget.</p>
+  </div>
+  <div class="why-grid">
+    <div class="why-card reveal">
+      <div class="why-icon">💰</div>
+      <div class="why-title">Budget Friendly</div>
+      <div class="why-desc">Transparent, flexible pricing. You know exactly what you pay for — no surprises.</div>
+    </div>
+    <div class="why-card reveal">
+      <div class="why-icon">📱</div>
+      <div class="why-title">Mobile First</div>
+      <div class="why-desc">Every website I build works perfectly on phones, tablets, and desktops.</div>
+    </div>
+    <div class="why-card reveal">
+      <div class="why-icon">🎨</div>
+      <div class="why-title">Good Design</div>
+      <div class="why-desc">Clean layouts, good fonts, and thoughtful colors — websites that look professional.</div>
+    </div>
+    <div class="why-card reveal">
+      <div class="why-icon">⚡</div>
+      <div class="why-title">Fast Delivery</div>
+      <div class="why-desc">I work efficiently and deliver on time so you're never left waiting.</div>
+    </div>
+    <div class="why-card reveal">
+      <div class="why-icon">🤝</div>
+      <div class="why-title">Easy to Work With</div>
+      <div class="why-desc">Simple communication, quick responses, smooth experience start to finish.</div>
+    </div>
+    <div class="why-card reveal">
+      <div class="why-icon">🔒</div>
+      <div class="why-title">Clean Code</div>
+      <div class="why-desc">Well-written HTML, CSS and JS — easy to maintain and built to last.</div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="contact-bg-img">
+    <img src="https://images.unsplash.com/photo-1517134191118-9d595e4c8c2b?w=1400&auto=format&fit=crop" alt="coding background" loading="lazy"/>
+  </div>
+  <div class="contact-overlay"></div>
+  <div class="contact-inner">
+    <div class="reveal">
+      <div class="section-label">Let's Connect</div>
+      <h2>Ready to Build Something?</h2>
+      <p class="section-desc">Reach out on Instagram — I respond fast. Let's discuss your idea and make it real.</p>
+    </div>
+    <div class="contact-card reveal">
+      <a href="https://www.instagram.com/web.devlp.n" target="_blank" rel="noopener" class="insta-btn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><circle cx="12" cy="12" r="4"/>
+          <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/>
+        </svg>
+        Message Me on Instagram
+      </a>
+      <div class="contact-handle">@<span>web.devlp.n</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">Deva — Web Developer</div>
+  <div class="footer-copy">© 2025 Deva. Built with passion 💜</div>
+</footer>
+
+<script>
+  // Theme
+  // Theme
+// Theme
+const html = document.documentElement;
+const btn = document.getElementById('themeBtn');
+const icon = document.getElementById('themeIcon');
+const label = document.getElementById('themeLabel');
+
+function setTheme(t) {
+  html.setAttribute('data-theme', t);
+  // If it is light mode, show the moon icon and text to switch to Dark mode
+  icon.textContent = t === 'light' ? '🌙' : '☀️';
+  label.textContent = t === 'light' ? 'Dark' : 'Light';
+  localStorage.setItem('deva-theme', t);
+}
+
+btn.addEventListener('click', () => setTheme(html.getAttribute('data-theme') === 'light' ? 'dark' : 'light'));
+
+// Checks if user has a preference saved, otherwise defaults to light mode
+const saved = localStorage.getItem('deva-theme');
+if (saved) {
+  setTheme(saved);
+} else {
+  setTheme('light');
+}
+  // Hamburger
+  const ham = document.getElementById('hamburger');
+  const nav = document.getElementById('navLinks');
+  ham.addEventListener('click', () => nav.classList.toggle('open'));
+  nav.querySelectorAll('a').forEach(a => a.addEventListener('click', () => nav.classList.remove('open')));
+
+  // Reveal
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+  }, { threshold: 0.1 });
+  document.querySelectorAll('.reveal').forEach(r => observer.observe(r));
+</script>
+</body>
+</html>
